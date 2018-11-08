@@ -4,6 +4,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class SDPMain {
@@ -50,26 +53,49 @@ public class SDPMain {
 
 	public static void main (String[] args) {
 		System.out.println("The SpeedDraft SuperDiskPerformante Application");
-		System.out.println("Build 002 - 29 Oct 2018");
+		System.out.println("Build 003 - 7 Nov 2018");
 		System.out.println("A Component of the SpeedDraft Drawing Automation System");
 		System.out.println("----- ----- ----- ----- -----");
 		System.out.println("Input directory to check out: ");
 		Scanner kbd = new Scanner(System.in);
 		slowDirectory = kbd.nextLine();
-		kbd.close();
 		if (slowDirectory.charAt(slowDirectory.length() - 1) == '\\') {
 			System.out.println("Directory must not end in a \'\\\' character.");
+			kbd.close();
 			return;
 		}
-		System.out.println("Checking out files from \"" + slowDirectory + "...");
-		long startCopyToFast = System.currentTimeMillis();
 		SDPMain listFilesUtil = new SDPMain();
 		try {
+			System.out.print("Backing up files from \"" + slowDirectory + "... ");
+			long startCopyToFast = System.currentTimeMillis();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+			Date date = new Date();
+			String currentDateTime = dateFormat.format(date);
+			String trueDestDirectory = fastDirectory;
+			fastDirectory = "C:\\Users\\talex\\Desktop\\SDP" + "-backup" + currentDateTime;
+			listFilesUtil.listFilesAndFilesSubDirectories(slowDirectory);
+			System.out.println("finished in " + ((int) Math.floor((System.currentTimeMillis() - startCopyToFast) / 1000) + 1) + " sec.");
+			System.out.print("Checking out files from \"" + slowDirectory + "... ");
+			startCopyToFast = System.currentTimeMillis();
+			fastDirectory = trueDestDirectory;
+			listFilesUtil.listFilesAndFilesSubDirectories(slowDirectory);
+			System.out.println("finished in " + ((int) Math.floor((System.currentTimeMillis() - startCopyToFast) / 1000) + 1) + " sec.");
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.print("Press Enter to check back in.");
+		kbd.nextLine();
+		System.out.println("Checking files back in...");
+		try {
+			String returnToDirectory = slowDirectory;
+			slowDirectory = fastDirectory;
+			fastDirectory = returnToDirectory;
 			listFilesUtil.listFilesAndFilesSubDirectories(slowDirectory);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Checkout finished in " + ((int) Math.floor((System.currentTimeMillis() - startCopyToFast) / 1000) + 1) + " sec.");
+		kbd.close();
 	}
 }
