@@ -15,12 +15,6 @@ public class SDPMain {
 	public static String fastDirectory = "C:\\Users\\talex\\Desktop\\SDP";
 	public static boolean debugPrintOuts = true;
 	
-	public static void checkOut(String directory) throws IOException {
-		Path sourceDirectory = Paths.get(directory);
-		Path targetDirectory = Paths.get(fastDirectory);
-		Files.copy(sourceDirectory, targetDirectory);
-	}
-	
 	public void listFiles(String directoryName) {
 		File directory = new File(directoryName);
 		File[] fList = directory.listFiles();
@@ -53,10 +47,10 @@ public class SDPMain {
 
 	public static void main (String[] args) {
 		System.out.println("The SpeedDraft SuperDiskPerformante Application");
-		System.out.println("Build 003 - 7 Nov 2018");
+		System.out.println("Build 004 - 8 Nov 2018");
 		System.out.println("A Component of the SpeedDraft Drawing Automation System");
 		System.out.println("----- ----- ----- ----- -----");
-		System.out.println("Input directory to check out: ");
+		System.out.print("Input directory to check out: ");
 		Scanner kbd = new Scanner(System.in);
 		slowDirectory = kbd.nextLine();
 		if (slowDirectory.charAt(slowDirectory.length() - 1) == '\\') {
